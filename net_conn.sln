@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "net_conn", "net_conn.csproj", "{C9B14D4E-2F00-4F74-AAB0-B463D4DDF493}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tcp_client", "..\tcp_client\tcp_client.csproj", "{6372FFE9-E934-453F-920D-CBC2E41BD10E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tcp_server", "..\tcp_server\tcp_server.csproj", "{E4A0E209-2622-4251-ADB9-CB2AE61FD4B8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C9B14D4E-2F00-4F74-AAB0-B463D4DDF493}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9B14D4E-2F00-4F74-AAB0-B463D4DDF493}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9B14D4E-2F00-4F74-AAB0-B463D4DDF493}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9B14D4E-2F00-4F74-AAB0-B463D4DDF493}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6372FFE9-E934-453F-920D-CBC2E41BD10E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6372FFE9-E934-453F-920D-CBC2E41BD10E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6372FFE9-E934-453F-920D-CBC2E41BD10E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6372FFE9-E934-453F-920D-CBC2E41BD10E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4A0E209-2622-4251-ADB9-CB2AE61FD4B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4A0E209-2622-4251-ADB9-CB2AE61FD4B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4A0E209-2622-4251-ADB9-CB2AE61FD4B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4A0E209-2622-4251-ADB9-CB2AE61FD4B8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
