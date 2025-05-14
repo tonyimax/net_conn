@@ -6,6 +6,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tcp_client", "..\tcp_client
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tcp_server", "..\tcp_server\tcp_server.csproj", "{E4A0E209-2622-4251-ADB9-CB2AE61FD4B8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "udp_client", "..\udp_client\udp_client.csproj", "{2546F959-C864-4284-9866-CED9C4DD438A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "udp_server", "..\udp_server\udp_server.csproj", "{2C0DCB84-2F65-48BA-A443-349A30640C6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +28,13 @@ Global
 		{E4A0E209-2622-4251-ADB9-CB2AE61FD4B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4A0E209-2622-4251-ADB9-CB2AE61FD4B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4A0E209-2622-4251-ADB9-CB2AE61FD4B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2546F959-C864-4284-9866-CED9C4DD438A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2546F959-C864-4284-9866-CED9C4DD438A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2546F959-C864-4284-9866-CED9C4DD438A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2546F959-C864-4284-9866-CED9C4DD438A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C0DCB84-2F65-48BA-A443-349A30640C6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C0DCB84-2F65-48BA-A443-349A30640C6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C0DCB84-2F65-48BA-A443-349A30640C6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C0DCB84-2F65-48BA-A443-349A30640C6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
