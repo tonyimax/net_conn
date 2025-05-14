@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "udp_client", "..\udp_client
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "udp_server", "..\udp_server\udp_server.csproj", "{2C0DCB84-2F65-48BA-A443-349A30640C6E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ws_server", "..\ws_server\ws_server.csproj", "{6B9D7400-B397-4BA5-8A7B-B201B31B9334}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{2C0DCB84-2F65-48BA-A443-349A30640C6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C0DCB84-2F65-48BA-A443-349A30640C6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C0DCB84-2F65-48BA-A443-349A30640C6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B9D7400-B397-4BA5-8A7B-B201B31B9334}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B9D7400-B397-4BA5-8A7B-B201B31B9334}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B9D7400-B397-4BA5-8A7B-B201B31B9334}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B9D7400-B397-4BA5-8A7B-B201B31B9334}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
