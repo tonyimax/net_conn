@@ -6,7 +6,7 @@ using System.Text;
 public class WebSocketServer
 {
     private HttpListener _listener = new HttpListener();
-    private const string PREFIX = "http://192.168.119.130:5000/";
+    private const string PREFIX = "http://127.0.0.1:5000/";
  
     public WebSocketServer()
     {
