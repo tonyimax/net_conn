@@ -22,6 +22,7 @@ public class Udp
         set => _port = value;
     }
 
+    //for udp server
     public void Server()
     {
         UdpClient uc1 = new UdpClient(Port);
@@ -36,6 +37,7 @@ public class Udp
         Console.WriteLine("===>{0}",Encoding.Default.GetString(buf));
     }
     
+    //for udp client
     public void Client()
     {
         UdpClient uc1 = new UdpClient(Port+1);
