@@ -6,55 +6,90 @@ namespace net_conn;
 
 public class Tcp
 {
-    private String host;
-    private int port;
+    private String _host="127.0.0.1";
+    private int _port=8000;
     private TcpClient c;
     private TcpListener l;
-    private NetworkStream s;
-    public string Host
+    private NetworkStream? _tcpStream=null;
+
+    public NetworkStream? TcpStream
     {
-        get => host;
-        set => host = value ?? throw new ArgumentNullException(nameof(value));
+        get => _tcpStream;
+        set => _tcpStream = value ?? throw new ArgumentNullException(nameof(value));
     }
 
-    public int Port
+    private string Host
     {
-        get => port;
-        set => port = value;
+        get => _host;
+        set => _host = value ?? throw new ArgumentNullException(nameof(value));
     }
 
-    public void Listen(int p)
+    private int Port
     {
-        l = new TcpListener(IPAddress.Any, p);
-        l.Start(1);
-        byte[] buffer = new byte[1024];
+        get => _port;
+        set => _port = value;
+    }
 
-        while (true)
+    public void Listen(String host ,int port)
+    {
+        TcpListener server = null;
+        try
         {
-            var c1 = l.AcceptTcpClient();
-            var s1 = c1.GetStream();
-            Console.WriteLine("===>{0} connected", c1.Client.RemoteEndPoint);
-            while (s1.Read(buffer,0,1024)>0)
+            IPAddress localAddr = IPAddress.Parse(host);
+            server = new TcpListener(localAddr,port);
+            server.Start();
+            Byte[] bytes = new Byte[256];
+            String data = null;
+            while(true)
             {
-                Console.WriteLine("<---[{0}]{1}",DateTime.Now,Encoding.Default.GetString(buffer));
+                Console.Write("Waiting for a connection... ");
+                using TcpClient client = server.AcceptTcpClient();
+                client.SendTimeout = 5000;
+                client.ReceiveTimeout = 5000;
+                Console.WriteLine("Connected!");
+                data = null;
+                NetworkStream stream = client.GetStream();
+                int i;
+                while((i = stream.Read(bytes, 0, bytes.Length))!=0)
+                {
+                    data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("<===[{0}]Received: {1}", DateTime.Now,data);
+                    data = data.ToUpper();
+                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
+                    stream.Write(msg, 0, msg.Length);
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine("===>[{0}]Sent: {1}",DateTime.Now,data);
+                }
             }
         }
+        catch(SocketException e)
+        {
+            Console.WriteLine("SocketException: {0}", e);
+        }
+        finally
+        {
+            server.Stop();
+        }
+
+        Console.WriteLine("\nHit enter to continue...");
+        Console.Read();
     }
 
     public void Send(String data)
     {
-        if (s.CanWrite)
+        if (null!=TcpStream && TcpStream.CanWrite)
         {
-            s.Write(Encoding.Default.GetBytes(data));
+            TcpStream.Write(Encoding.Default.GetBytes(data));
         }
     }
 
     public String Receive()
     {
         byte[] buf = new byte[1024];
-        if (s.CanRead)
+        if (TcpStream.CanRead)
         {
-            int n = s.Read(buf);
+            int n = TcpStream.Read(buf);
             if (n > 0)
             {
                 return Encoding.Default.GetString(buf);
@@ -65,9 +100,9 @@ public class Tcp
 
     public void Close()
     {
-        if (s.CanRead||s.CanWrite)
+        if (TcpStream.CanRead||TcpStream.CanWrite)
         {
-            s.Close();
+            TcpStream.Close();
         }
         if (c.Connected)
         {
@@ -90,16 +125,13 @@ public class Tcp
         {
             c.Connect(h,p);
             if (c.Connected)
-            {
-                s = c.GetStream();
+            { 
+                TcpStream = c.GetStream();
             }
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-        }
-        finally
-        {
             c.Dispose();
         }
     }
