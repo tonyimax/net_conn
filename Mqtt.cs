@@ -12,6 +12,7 @@ public class Mqtt
         using (var mqttClient = mqttFactory.CreateMqttClient())
         {
             var mqttClientOptions = new MqttClientOptionsBuilder()
+                .WithClientId("dotnet-client-subscribe")
                 .WithCredentials("ubuntu_dev_192_168_119_130","6e94a638d6b35f43de8a2f0cd1644089cb004e19e8667cfd0e427a7437032e75")
                 .WithTcpServer(ip).Build();
             mqttClient.ApplicationMessageReceivedAsync += e =>
@@ -50,7 +51,7 @@ public class Mqtt
     {
         var mqttFactory = new MqttClientFactory();
         var mqttClientOptions = new MqttClientOptionsBuilder()
-            .WithClientId("dotnet-client")
+            .WithClientId("dotnet-client-publish")
             .WithCredentials("ubuntu_dev_192_168_119_130","6e94a638d6b35f43de8a2f0cd1644089cb004e19e8667cfd0e427a7437032e75")
             .WithTcpServer(ip, 1883)
             .Build();
