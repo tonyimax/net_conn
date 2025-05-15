@@ -14,6 +14,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ws_server", "..\ws_server\w
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ws_client", "..\ws_client\ws_client.csproj", "{E7CE3131-85EF-43B3-8795-0FF466E379D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mq_server", "..\mq_server\mq_server.csproj", "{736196D3-A444-44A0-8FE3-075B813691B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mq_client", "..\mq_client\mq_client.csproj", "{262DBD6A-4364-49AF-87F6-9300185FF239}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +52,13 @@ Global
 		{E7CE3131-85EF-43B3-8795-0FF466E379D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7CE3131-85EF-43B3-8795-0FF466E379D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7CE3131-85EF-43B3-8795-0FF466E379D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{736196D3-A444-44A0-8FE3-075B813691B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{736196D3-A444-44A0-8FE3-075B813691B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{736196D3-A444-44A0-8FE3-075B813691B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{736196D3-A444-44A0-8FE3-075B813691B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{262DBD6A-4364-49AF-87F6-9300185FF239}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{262DBD6A-4364-49AF-87F6-9300185FF239}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{262DBD6A-4364-49AF-87F6-9300185FF239}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{262DBD6A-4364-49AF-87F6-9300185FF239}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
