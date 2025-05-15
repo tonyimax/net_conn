@@ -5,12 +5,13 @@ namespace net_conn;
 
 public class Mqtt
 {
+    private static string ip = "43.136.40.107";
     public static async Task Subscribe()
     {
         var mqttFactory = new MqttClientFactory();
         using (var mqttClient = mqttFactory.CreateMqttClient())
         {
-            var mqttClientOptions = new MqttClientOptionsBuilder().WithTcpServer("192.168.119.130").Build();
+            var mqttClientOptions = new MqttClientOptionsBuilder().WithTcpServer(ip).Build();
             mqttClient.ApplicationMessageReceivedAsync += e =>
             {
                 Console.WriteLine($"Recv===>:clientid:{e.ClientId}," +
@@ -18,8 +19,12 @@ public class Mqtt
                                   $"message:{Encoding.UTF8.GetString(e.ApplicationMessage.Payload.First.Span)}");
                 return Task.CompletedTask;
             };
-            await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
-            
+            var mccResult = await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
+            if (mccResult.ResultCode != MqttClientConnectResultCode.Success)
+            {
+                Console.WriteLine("===>[{0}] Publish->ConnectAsync Result:{1},see MqttClientConnectResultCode",DateTime.Now,mccResult.ResultCode);
+                return;
+            }
             var mqttSubscribeOptions = mqttFactory.
                 CreateSubscribeOptionsBuilder()
                 .WithTopicFilter("test/topic")
@@ -44,11 +49,16 @@ public class Mqtt
         var mqttFactory = new MqttClientFactory();
         var mqttClientOptions = new MqttClientOptionsBuilder()
             .WithClientId("dotnet-client")
-            .WithTcpServer("192.168.119.130", 1883)
+            .WithTcpServer(ip, 1883)
             .Build();
  
         var mqttClient = mqttFactory.CreateMqttClient();
-        await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
+        var mccResult = await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
+        if (mccResult.ResultCode != MqttClientConnectResultCode.Success)
+        {
+            Console.WriteLine("===>[{0}] Publish->ConnectAsync Result:{1},see MqttClientConnectResultCode",DateTime.Now,mccResult.ResultCode);
+            return;
+        }
         Console.WriteLine("Connected to MQTT broker");
 
         while (true)
