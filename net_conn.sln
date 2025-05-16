@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mq_server", "..\mq_server\m
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mq_client", "..\mq_client\mq_client.csproj", "{262DBD6A-4364-49AF-87F6-9300185FF239}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mq_client_with_mq433", "..\mq_client_with_mq433\mq_client_with_mq433.csproj", "{22748A94-2587-4D1E-A17C-4C483E1BBCE6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +62,9 @@ Global
 		{262DBD6A-4364-49AF-87F6-9300185FF239}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{262DBD6A-4364-49AF-87F6-9300185FF239}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{262DBD6A-4364-49AF-87F6-9300185FF239}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22748A94-2587-4D1E-A17C-4C483E1BBCE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22748A94-2587-4D1E-A17C-4C483E1BBCE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22748A94-2587-4D1E-A17C-4C483E1BBCE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22748A94-2587-4D1E-A17C-4C483E1BBCE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
