@@ -25,16 +25,18 @@ public class Udp
     //for udp server
     public void Server()
     {
-        UdpClient uc1 = new UdpClient(Port);
-        Byte[] buf = Encoding.Default.GetBytes("Hello Client");
-        
+        UdpClient uc1 = new UdpClient(8850);
         IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
-        Byte[] rBuf = uc1.Receive(ref RemoteIpEndPoint);
-        string data = Encoding.Default.GetString(rBuf);
-        Console.WriteLine("<==={0}",data);
+        while (true)
+        {
+            Byte[] rBuf = uc1.Receive(ref RemoteIpEndPoint);
+            string data = Encoding.Default.GetString(rBuf);
+            Console.WriteLine("<===[{0}][{1}:{2}] {3}",DateTime.Now,RemoteIpEndPoint.Address,RemoteIpEndPoint.Port,data);
 
-        uc1.Send(buf, RemoteIpEndPoint);
-        Console.WriteLine("===>{0}",Encoding.Default.GetString(buf));
+            Byte[] buf = Encoding.Default.GetBytes(  String.Format("[{0}] Hello Client ,UDP DATA FROM C# Server", DateTime.Now));
+            uc1.Send(buf, RemoteIpEndPoint);
+            Console.WriteLine("===>{0}",Encoding.Default.GetString(buf));
+        }
     }
     
     //for udp client
