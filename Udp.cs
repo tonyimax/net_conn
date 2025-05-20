@@ -67,70 +67,70 @@ public class Udp
     //for udp server
     public void Server()
     {
-         UdpClient uc1 = new UdpClient(8811);
-    IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
-    while (true)
-    {
-        bool isFreq=false;
-        Byte[] rBuf = uc1.Receive(ref RemoteIpEndPoint);
-        if (rBuf?.Length > 0 && rBuf[0] == 0xdd && rBuf[1] == 0xdd && rBuf[2] == 0xfa && rBuf[4] == 0x03)
+        UdpClient uc1 = new UdpClient(8811);
+        IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
+        while (true)
         {
-            isFreq = true;
-            Console.WriteLine("===>接收到客户端的对频数据:{0}",rBuf[4]);
-        }
-
-        JsonObject? obj = null;
-        string data = Encoding.Default.GetString(rBuf);
-        Console.WriteLine("<===[{0}][{1}:{2}] {3}",DateTime.Now,RemoteIpEndPoint.Address,RemoteIpEndPoint.Port,data);
-        lock (data)
-        {
-            HttpClient client = new HttpClient();
-            var r = client.GetFromJsonAsync(
-                "https://qifu-api.baidubce.com/ip/geo/v1/district?ip="+RemoteIpEndPoint.Address,
-                new JsonObject().GetType(),
-                CancellationToken.None);
-            r.Wait();
-            obj = (JsonObject?)r.Result;
-        }
-        if (obj!= null)
-        {
-            Console.WriteLine(obj);
-            var code =obj["code"]?.ToString();
-            if (code == "Success")
+            bool isFreq=false;
+            Byte[] rBuf = uc1.Receive(ref RemoteIpEndPoint);
+            if (rBuf?.Length > 0 && rBuf[0] == 0xdd && rBuf[1] == 0xdd && rBuf[2] == 0xfa && rBuf[4] == 0x03)
             {
-                var areaData = (JsonObject?)obj["data"];
-                var ip = obj["ip"]?.ToString();
-                var country =  areaData?["country"];
-                if (country!=null && country.GetValue<String>().Equals("中国")||areaData["continent"].GetValue<String>().Equals("保留IP"))
+                isFreq = true;
+                Console.WriteLine("===>接收到客户端的对频数据:{0}",rBuf[4]);
+            }
+
+            JsonObject? obj = null;
+            string data = Encoding.Default.GetString(rBuf);
+            Console.WriteLine("<===[{0}][{1}:{2}] {3}",DateTime.Now,RemoteIpEndPoint.Address,RemoteIpEndPoint.Port,data);
+            lock (data)
+            {
+                HttpClient client = new HttpClient();
+                var r = client.GetFromJsonAsync(
+                    "https://qifu-api.baidubce.com/ip/geo/v1/district?ip="+RemoteIpEndPoint.Address,
+                    new JsonObject().GetType(),
+                    CancellationToken.None);
+                r.Wait();
+                obj = (JsonObject?)r.Result;
+            }
+            if (obj!= null)
+            {
+                Console.WriteLine(obj);
+                var code =obj["code"]?.ToString();
+                if (code == "Success")
                 {
-                    if (isFreq)
+                    var areaData = (JsonObject?)obj["data"];
+                    var ip = obj["ip"]?.ToString();
+                    var country =  areaData?["country"];
+                    if (country!=null && country.GetValue<String>().Equals("中国")||areaData["continent"].GetValue<String>().Equals("保留IP"))
                     {
-                        byte[] buf = new byte[8];
-                        buf[0] = 0xdd;
-                        buf[1] = 0xdd;
-                        buf[2] = 0xfa;
-                        buf[3] = 0x03;
-                        buf[4] = 0x01;
-                        buf[5] = 0x00;
-                        buf[6] = 0x01;
-                        int sum = 0;
-                        for (int i = 0; i < 7; i++){
-                            sum += buf[i];
+                        if (isFreq)
+                        {
+                            byte[] buf = new byte[8];
+                            buf[0] = 0xdd;
+                            buf[1] = 0xdd;
+                            buf[2] = 0xfa;
+                            buf[3] = 0x03;
+                            buf[4] = 0x01;
+                            buf[5] = 0x00;
+                            buf[6] = 0x01;
+                            int sum = 0;
+                            for (int i = 0; i < 7; i++){
+                                sum += buf[i];
+                            }
+                            buf[7] = (byte)(sum & 0xff);
+                            uc1.Send(buf, RemoteIpEndPoint);
+                            Console.WriteLine("===>回复对频数据: {0}",buf[4]);
                         }
-                        buf[7] = (byte)(sum & 0xff);
-                        uc1.Send(buf, RemoteIpEndPoint);
-                        Console.WriteLine("===>回复对频数据: {0}",Encoding.Default.GetString(buf));
-                    }
-                    else
-                    {
-                        Byte[] buf = Encoding.Default.GetBytes(  String.Format("[{0}] Hello Client ,UDP DATA FROM C# Server", DateTime.Now));
-                        uc1.Send(buf, RemoteIpEndPoint);
-                        Console.WriteLine("===>{0}",Encoding.Default.GetString(buf));
+                        else
+                        {
+                            Byte[] buf = Encoding.Default.GetBytes(  String.Format("[{0}] Hello Client ,UDP DATA FROM C# Server", DateTime.Now));
+                            uc1.Send(buf, RemoteIpEndPoint);
+                            Console.WriteLine("===>{0}",Encoding.Default.GetString(buf));
+                        }
                     }
                 }
             }
         }
-    }
     }
     
     //for udp client
