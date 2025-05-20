@@ -3,13 +3,14 @@ using System.Net.Http.Json;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json.Nodes;
+using ServiceStack.Redis;
 
 namespace net_conn;
 
 public class Udp
 {
     private String _host = "127.0.0.1";
-    private int _port = 8850;
+    private int _port = 8811;
 
     public Udp()
     {
@@ -59,20 +60,31 @@ public class Udp
                 sum += buf[i];
             }
             buf[7] = (byte)(sum & 0xff);
-            uc1.Send(buf,8);
-            Console.WriteLine("===>Send对频数据: {0}",buf[4]);
+            if (uc1.Client.Connected)
+            {
+                uc1.Send(buf,8);
+                Console.WriteLine("===>Send对频数据: {0}",buf[4]);
+            }
+            else
+            {
+                Console.WriteLine("===>Udp Server Not Start");
+            }
         }).Start();
     }
 
     //for udp server
     public void Server()
     {
+        RedisClient redis = new RedisClient("127.0.0.1", 6379);
+        redis.Password = "123456";
+
         UdpClient uc1 = new UdpClient(8811);
         IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
         while (true)
         {
             bool isFreq=false;
             Byte[] rBuf = uc1.Receive(ref RemoteIpEndPoint);
+            redis.Add("RemoteIpEndPoint", String.Format("{0}:{1}",RemoteIpEndPoint.Address,RemoteIpEndPoint.Port));
             if (rBuf?.Length > 0 && rBuf[0] == 0xdd && rBuf[1] == 0xdd && rBuf[2] == 0xfa && rBuf[4] == 0x03)
             {
                 isFreq = true;
@@ -118,14 +130,28 @@ public class Udp
                                 sum += buf[i];
                             }
                             buf[7] = (byte)(sum & 0xff);
-                            uc1.Send(buf, RemoteIpEndPoint);
-                            Console.WriteLine("===>回复对频数据: {0}",buf[4]);
+                            if (uc1.Client.Connected)
+                            {
+                                uc1.Send(buf, RemoteIpEndPoint);
+                                Console.WriteLine("===>回复对频数据: {0}",buf[4]);
+                            }
+                            else
+                            {
+                                Console.WriteLine("===>Udp server not start");
+                            }
                         }
                         else
                         {
                             Byte[] buf = Encoding.Default.GetBytes(  String.Format("[{0}] Hello Client ,UDP DATA FROM C# Server", DateTime.Now));
-                            uc1.Send(buf, RemoteIpEndPoint);
-                            Console.WriteLine("===>{0}",Encoding.Default.GetString(buf));
+                            if (uc1.Client.Connected)
+                            {
+                                uc1.Send(buf, RemoteIpEndPoint);
+                                Console.WriteLine("===>{0}",Encoding.Default.GetString(buf));
+                            }
+                            else
+                            {
+                                Console.WriteLine("===>Udp server not start");
+                            }
                         }
                     }
                 }
@@ -146,41 +172,48 @@ public class Udp
                 try
                 {
                     bool isFreq = false;
-                    Byte[] buf = Encoding.Default.GetBytes( String.Format("[{0}] Hello Server UDP DATA FROM C# Client",DateTime.Now));
-                    uc1.Send(buf, buf.Length);
-                    Console.WriteLine("===>{0}",Encoding.Default.GetString(buf));
-                    IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
-                    Byte[] rBuf = uc1.Receive(ref RemoteIpEndPoint);
-                    if (rBuf?.Length > 0 && rBuf[0]==0xdd &&  rBuf[1]==0xdd && rBuf[2]==0xfa)
+                    if (uc1.Client.Connected)
                     {
-                        isFreq = true;
-                        switch (rBuf[4])
+                        Byte[] buf = Encoding.Default.GetBytes( String.Format("[{0}] Hello Server UDP DATA FROM C# Client",DateTime.Now));
+                        uc1.Send(buf, buf.Length);
+                        Console.WriteLine("===>{0}",Encoding.Default.GetString(buf));
+                        IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
+                        Byte[] rBuf = uc1.Receive(ref RemoteIpEndPoint);
+                        if (rBuf?.Length > 0 && rBuf[0]==0xdd &&  rBuf[1]==0xdd && rBuf[2]==0xfa)
                         {
-                            case 0:
-                                Console.WriteLine("===>对频失败");
-                                Thread.Sleep(2000);
-                                sendFrequency(uc1);
-                                break;
-                            case 1:
-                                Console.WriteLine("===>对频成功");
-                                break;
-                            case 2:
-                                Console.WriteLine("===>对频中");
-                                break;
-                            case 3:
-                                Console.WriteLine("===>开始对频");
-                                break;
+                            isFreq = true;
+                            switch (rBuf[4])
+                            {
+                                case 0:
+                                    Console.WriteLine("===>对频失败");
+                                    Thread.Sleep(2000);
+                                    sendFrequency(uc1);
+                                    break;
+                                case 1:
+                                    Console.WriteLine("===>对频成功");
+                                    break;
+                                case 2:
+                                    Console.WriteLine("===>对频中");
+                                    break;
+                                case 3:
+                                    Console.WriteLine("===>开始对频");
+                                    break;
+                            }
                         }
-                    }
 
-                    if (isFreq)
-                    {
-                        Console.WriteLine("<===对频结果:{0}",rBuf[4]);
+                        if (isFreq)
+                        {
+                            Console.WriteLine("<===对频结果:{0}",rBuf[4]);
+                        }
+                        else
+                        {
+                            string data = Encoding.Default.GetString(rBuf);
+                            Console.WriteLine("<==={0}",data);
+                        }
                     }
                     else
                     {
-                        string data = Encoding.Default.GetString(rBuf);
-                        Console.WriteLine("<==={0}",data);
+                        Console.WriteLine("===>Udp server not start");
                     }
                     Thread.Sleep(1000);
                 }
