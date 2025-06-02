@@ -38,6 +38,7 @@ public class Tcp
             IPAddress localAddr = IPAddress.Parse(host);
             server = new TcpListener(localAddr,port);
             server.Start();
+            Console.WriteLine("Listening on port : " + port);
             Byte[] bytes = new Byte[256];
             String data = null;
             while(true)
@@ -49,7 +50,7 @@ public class Tcp
                 Console.WriteLine("Connected!");
                 
                 var http = new Http();
-                var result =  http.CheckIp("127.0.0.1");
+                var result =  http.CheckIp(client.Client.RemoteEndPoint.ToString().Split(":")[0]);
                 result.Wait();
                 if (http.IsFromChina)
                 {
