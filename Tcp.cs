@@ -47,20 +47,33 @@ public class Tcp
                 client.SendTimeout = 5000;
                 client.ReceiveTimeout = 5000;
                 Console.WriteLine("Connected!");
-                data = null;
-                NetworkStream stream = client.GetStream();
-                int i;
-                while((i = stream.Read(bytes, 0, bytes.Length))!=0)
+                
+                var http = new Http();
+                var result =  http.CheckIp("127.0.0.1");
+                result.Wait();
+                if (http.IsFromChina())
                 {
-                    data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("<===[{0}]Received: {1}", DateTime.Now,data);
-                    data = data.ToUpper();
-                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
-                    stream.Write(msg, 0, msg.Length);
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine("===>[{0}]Sent: {1}",DateTime.Now,data);
+                    data = null;
+                    NetworkStream stream = client.GetStream();
+                    int i;
+                    while((i = stream.Read(bytes, 0, bytes.Length))!=0)
+                    {
+                        data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("<===[{0}]Received: {1}", DateTime.Now,data);
+                        data = data.ToUpper();
+                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
+                        stream.Write(msg, 0, msg.Length);
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine("===>[{0}]Sent: {1}",DateTime.Now,data);
+                    }
                 }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("<===[{0}]not china ip not event: {1}", DateTime.Now,data);
+                }
+                
             }
         }
         catch(SocketException e)
@@ -80,20 +93,45 @@ public class Tcp
     {
         if (null!=TcpStream && TcpStream.CanWrite)
         {
-            TcpStream.Write(Encoding.Default.GetBytes(data));
+            try
+            {
+                TcpStream.Write(Encoding.Default.GetBytes(data));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
+    }
+
+    public int ReceiveOneByte()
+    {
+        int n = 0;
+        byte[] buf = new byte[1];
+        if (TcpStream.CanRead)
+        {
+            n = TcpStream.Read(buf,0,buf.Length);
+        }
+        return n;
     }
 
     public String Receive()
     {
-        byte[] buf = new byte[1024];
-        if (TcpStream.CanRead)
+        try
         {
-            int n = TcpStream.Read(buf);
-            if (n > 0)
+            byte[] buf = new byte[1024];
+            if (TcpStream.CanRead)
             {
-                return Encoding.Default.GetString(buf);
+                int n = TcpStream.Read(buf);
+                if (n > 0)
+                {
+                    return Encoding.Default.GetString(buf);
+                }
             }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
         }
         return String.Empty;
     }
