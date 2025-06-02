@@ -51,7 +51,7 @@ public class Tcp
                 var http = new Http();
                 var result =  http.CheckIp("127.0.0.1");
                 result.Wait();
-                if (http.IsFromChina())
+                if (http.IsFromChina)
                 {
                     data = null;
                     NetworkStream stream = client.GetStream();
