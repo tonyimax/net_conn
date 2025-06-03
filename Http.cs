@@ -8,6 +8,11 @@ public class Http
 {
     bool _isFromChina = false;
 
+    public Http()
+    {
+        Console.WriteLine($"作者:林宏权 博客: https://blog.csdn.net/fittec?type=blog  QQ:296863766");
+    }
+
     public bool IsFromChina
     {
         get => _isFromChina;

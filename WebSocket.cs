@@ -16,6 +16,7 @@ public class WebSocketServer
     public void StartListening()
     {
         _listener.Start();
+        Console.WriteLine($"作者:林宏权 博客: https://blog.csdn.net/fittec?type=blog  QQ:296863766");
         Console.WriteLine("Listening on " + PREFIX);
         Task.Run(() => ListenContinuouslyAsync());
     }

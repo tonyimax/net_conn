@@ -75,6 +75,8 @@ public class Udp
     //for udp server
     public void Server()
     {
+        Console.WriteLine($"作者:林宏权 博客: https://blog.csdn.net/fittec?type=blog  QQ:296863766");
+        
         RedisClient redis = new RedisClient("127.0.0.1", 6379);
         redis.Password = "123456";
 
@@ -162,6 +164,8 @@ public class Udp
     //for udp client
     public void Client()
     {
+        Console.WriteLine($"作者:林宏权 博客: https://blog.csdn.net/fittec?type=blog  QQ:296863766");
+        
         UdpClient uc1 = new UdpClient();
         uc1.Connect(Host,Port);
         

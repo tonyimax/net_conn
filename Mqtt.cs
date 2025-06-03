@@ -8,6 +8,7 @@ public class Mqtt
     private static string ip = "43.136.40.107";
     public static async Task Subscribe()
     {
+        Console.WriteLine($"作者:林宏权 博客: https://blog.csdn.net/fittec?type=blog  QQ:296863766");
         var mqttFactory = new MqttClientFactory();
         using (var mqttClient = mqttFactory.CreateMqttClient())
         {
@@ -49,6 +50,7 @@ public class Mqtt
 
     public static async Task Publish()
     {
+        Console.WriteLine($"作者:林宏权 博客: https://blog.csdn.net/fittec?type=blog  QQ:296863766");
         var mqttFactory = new MqttClientFactory();
         var mqttClientOptions = new MqttClientOptionsBuilder()
             .WithClientId("dotnet-client-publish")

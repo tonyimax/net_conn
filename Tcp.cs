@@ -38,21 +38,23 @@ public class Tcp
             IPAddress localAddr = IPAddress.Parse(host);
             server = new TcpListener(localAddr,port);
             server.Start();
-            Console.WriteLine("Listening on port : " + port);
+            Console.WriteLine($"作者:林宏权 博客: https://blog.csdn.net/fittec?type=blog  QQ:296863766");
+            Console.WriteLine($"TCP服务已启动监听端口:[{port}]");
             Byte[] bytes = new Byte[256];
             String data = null;
             while(true)
             {
-                Console.Write("Waiting for a connection... ");
+                Console.Write("等待远程主机连接... ");
                 using TcpClient client = server.AcceptTcpClient();
                 client.SendTimeout = 5000;
                 client.ReceiveTimeout = 5000;
-                Console.WriteLine("Connected!");
+                Console.WriteLine($"远程主机[{client.Client.RemoteEndPoint}]已连接");
                 
                 var http = new Http();
-                var result =  http.CheckIp(client.Client.RemoteEndPoint.ToString().Split(":")[0]);
+                var rip = client.Client.RemoteEndPoint.ToString().Split(":")[0];
+                var result =  http.CheckIp(rip);
                 result.Wait();
-                if (http.IsFromChina)
+                if (http.IsFromChina || rip == "10.1.8.8" || rip == "127.0.0.1")
                 {
                     data = null;
                     NetworkStream stream = client.GetStream();
@@ -61,18 +63,19 @@ public class Tcp
                     {
                         data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("<===[{0}]Received: {1}", DateTime.Now,data);
+                        Console.WriteLine("<===[{0}]接收[{2}]: {1}", DateTime.Now,data,rip);
                         data = data.ToUpper();
                         byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
                         stream.Write(msg, 0, msg.Length);
                         Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.WriteLine("===>[{0}]Sent: {1}",DateTime.Now,data);
+                        Console.WriteLine("===>[{0}]发送[{2}]: {1}",DateTime.Now,data,rip);
                     }
                 }
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("<===[{0}]not china ip not event: {1}", DateTime.Now,data);
+                    Console.WriteLine("<===[{0}]非中国地区IP[{2}]不回应: {1}", DateTime.Now,data,rip);
+                    Console.ForegroundColor = ConsoleColor.Green;
                 }
                 
             }
