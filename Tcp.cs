@@ -12,6 +12,10 @@ public class Tcp
     private TcpListener l;
     private NetworkStream? _tcpStream=null;
 
+    public delegate void ListenSuccess();
+
+    private ListenSuccess _callback;
+
     public NetworkStream? TcpStream
     {
         get => _tcpStream;
@@ -30,6 +34,10 @@ public class Tcp
         set => _port = value;
     }
 
+    public void NotifyListenSuccess(ListenSuccess success) 
+    {
+        _callback=success;
+    }
     public void Listen(String host ,int port)
     {
         TcpListener server = null;
@@ -40,6 +48,9 @@ public class Tcp
             server.Start();
             Console.WriteLine($"作者:林宏权 博客: https://blog.csdn.net/fittec?type=blog  QQ:296863766");
             Console.WriteLine($"TCP服务已启动监听端口:[{port}]");
+            if (null != _callback){
+                _callback();
+            }
             Byte[] bytes = new Byte[256];
             String data = null;
             while(true)
@@ -59,17 +70,26 @@ public class Tcp
                     data = null;
                     NetworkStream stream = client.GetStream();
                     int i;
-                    while((i = stream.Read(bytes, 0, bytes.Length))!=0)
+                    try
                     {
-                        data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("<===[{0}]接收[{2}]: {1}", DateTime.Now,data,rip);
-                        data = data.ToUpper();
-                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
-                        stream.Write(msg, 0, msg.Length);
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.WriteLine("===>[{0}]发送[{2}]: {1}",DateTime.Now,data,rip);
+                        while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
+                        {
+                            data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("<===[{0}]接收[{2}]: {1}", DateTime.Now, data, rip);
+                            data = data.ToUpper();
+                            byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
+                            stream.Write(msg, 0, msg.Length);
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            Console.WriteLine("===>[{0}]发送[{2}]: {1}", DateTime.Now, data, rip);
+                        }
                     }
+                    catch (Exception e) 
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine(e.Message);
+                    }
+                    
                 }
                 else
                 {
