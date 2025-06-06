@@ -14,7 +14,10 @@ public class Tcp
 
     public delegate void ListenSuccess();
 
+    public delegate void UpdateGridRowData(string ip,string port,string aparea);
+
     private ListenSuccess _callback;
+    private UpdateGridRowData _callback_update_row;
 
     public NetworkStream? TcpStream
     {
@@ -38,6 +41,12 @@ public class Tcp
     {
         _callback=success;
     }
+
+    public void NotifyUpdateRow(UpdateGridRowData callback) 
+    {
+        _callback_update_row = callback;
+    }
+
     public void Listen(String host ,int port)
     {
         TcpListener server = null;
@@ -63,10 +72,15 @@ public class Tcp
                 
                 var http = new Http();
                 var rip = client.Client.RemoteEndPoint.ToString().Split(":")[0];
+                var rport = client.Client.RemoteEndPoint.ToString().Split(":")[1];
                 var result =  http.CheckIp(rip);
                 result.Wait();
                 if (http.IsFromChina || rip == "10.1.8.8" || rip == "127.0.0.1")
                 {
+                    if (null != _callback_update_row) 
+                    {
+                        _callback_update_row(rip, rport, "中国");
+                    }
                     data = null;
                     NetworkStream stream = client.GetStream();
                     int i;
